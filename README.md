@@ -1,71 +1,71 @@
 # Mechanical Stop Watch
 
-一个基于 Vue 3、TypeScript 和 Vite 构建的机械秒表交互组件。项目使用真实图片素材还原机械秒表外观，通过指针旋转、按钮命中检测和机械滴答音效提供接近实体秒表的使用体验。
+An interactive mechanical stopwatch component built with Vue 3, TypeScript, and Vite. The project recreates the look and feel of a physical stopwatch with layered image assets, rotating hands, precise crown hit detection, and a mechanical ticking sound.
 
-[English README](./README.en.md)
+[中文 README](./README.cn.md)
 
-## 功能特性
+## Features
 
-- 机械秒表外观：使用独立的表盘、指针、按钮高亮图层进行组合渲染。
-- 精准计时：基于 `performance.now()` 和 `requestAnimationFrame` 更新指针角度。
-- 双指针显示：秒针显示 60 秒周期，分针显示 60 分钟周期。
-- 表冠交互：点击表冠启动或暂停，双击表冠在停止时归零。
-- 精确点击区域：使用按钮遮罩图的 alpha 通道判断点击是否落在表冠区域。
-- 音效反馈：运行时播放机械滴答音，停止时自动停止音效。
-- 响应式尺寸：秒表组件按原始比例缩放，适配不同屏幕宽度。
+- Mechanical stopwatch visuals: composed from separate dial, hand, crown, and hover indicator image layers.
+- Accurate elapsed time: powered by `performance.now()` and `requestAnimationFrame`.
+- Two-hand display: the second hand completes a full turn every 60 seconds, and the minute hand completes a full turn every 60 minutes.
+- Crown interaction: click the crown to start or pause, and double-click the crown to reset while stopped.
+- Precise hit testing: reads the alpha channel from the crown mask image to detect whether the pointer is inside the clickable crown area.
+- Sound feedback: plays a ticking mechanical sound while the stopwatch is running and stops it when paused.
+- Responsive sizing: keeps the original stopwatch aspect ratio while scaling to fit the available width.
 
-## 技术栈
+## Tech Stack
 
 - Vue 3
 - TypeScript
 - Vite
-- HTML Canvas，用于读取按钮遮罩 alpha 通道
-- Web Audio / `HTMLAudioElement`，用于播放机械音效
+- HTML Canvas for reading the crown mask alpha channel
+- Web Audio / `HTMLAudioElement` for ticking sound playback
 
-## 快速开始
+## Getting Started
 
-安装依赖：
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-启动开发服务器：
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-构建生产版本：
+Build for production:
 
 ```bash
 npm run build
 ```
 
-本地预览生产构建：
+Preview the production build locally:
 
 ```bash
 npm run preview
 ```
 
-## 使用方式
+## Usage
 
-启动项目后，在页面中操作机械秒表：
+After starting the project, interact with the stopwatch on the page:
 
-- 将鼠标移动到表冠区域时，会显示按钮高亮提示。
-- 单击表冠：启动或暂停计时。
-- 双击表冠：归零计时器。当前实现仅在秒表停止时执行归零。
+- Move the pointer over the crown area to show the crown hover indicator.
+- Single-click the crown to start or pause the stopwatch.
+- Double-click the crown to reset the timer. The current implementation resets only when the stopwatch is stopped.
 
-浏览器可能会要求用户先进行一次页面交互后才允许播放音频，这是现代浏览器的自动播放策略。
+Modern browsers may require a user interaction before allowing audio playback because of autoplay policies.
 
-## 项目结构
+## Project Structure
 
 ```text
 .
 ├── public/
 │   ├── assets/
-│   │   ├── MechanicalStopwatch/   # 秒表表盘、按钮、指针等图片素材
-│   │   └── audio/                 # 机械滴答音效
+│   │   ├── MechanicalStopwatch/   # Stopwatch dial, crown, hands, and related image assets
+│   │   └── audio/                 # Mechanical ticking sound
 │   └── favicon.svg
 ├── src/
 │   ├── common/
@@ -82,21 +82,21 @@ npm run preview
 └── vite.config.ts
 ```
 
-## 核心实现
+## Implementation Notes
 
-`src/common/MechanicalStopwatch/MechanicalStopwatch.vue` 负责组件模板和图层布局。表盘、按钮提示层、分针和秒针以绝对定位叠放，指针通过动态 `transform` 旋转。
+`src/common/MechanicalStopwatch/MechanicalStopwatch.vue` defines the component template and layered layout. The dial, hover indicator, minute hand, and second hand are stacked with absolute positioning, and the hands rotate through dynamic `transform` styles.
 
-`src/common/MechanicalStopwatch/MechanicalStopwatch.ts` 封装秒表状态和交互逻辑，包括计时、指针角度计算、按钮命中检测、单击/双击处理和音效控制。
+`src/common/MechanicalStopwatch/MechanicalStopwatch.ts` contains the stopwatch state and interaction logic, including elapsed-time tracking, hand rotation calculation, crown hit detection, click and double-click handling, and sound control.
 
-`src/common/audiotool/PlayAudio.ts` 封装音频播放与停止逻辑，支持重复播放并在秒表停止时清理当前音频。
+`src/common/audiotool/PlayAudio.ts` wraps audio playback and cleanup. It supports repeated playback and stops the active audio when the stopwatch is paused.
 
-## 素材说明
+## Assets
 
-秒表图片素材位于 `public/assets/MechanicalStopwatch/`，音效文件位于 `public/assets/audio/`。这些资源通过 Vite public 目录以根路径访问，例如：
+Stopwatch image assets are stored in `public/assets/MechanicalStopwatch/`, and the sound effect is stored in `public/assets/audio/`. These resources are served from Vite's public directory and can be referenced with root-relative paths, for example:
 
 ```ts
 /assets/MechanicalStopwatch/MechanicalStopwatch.png
 /assets/audio/TickdaTickda.wav
 ```
 
-如果后续替换图片素材，需要同步检查 `MechanicalStopwatch.ts` 中的表盘尺寸、指针旋转中心和按钮遮罩区域配置。
+If you replace the image assets later, also review the dial size, hand pivot coordinates, and crown mask configuration in `MechanicalStopwatch.ts`.
